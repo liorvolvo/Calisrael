@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calisrael | מצא מכוני כושר פומביים באזור שלך!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="CalIsrael Logo" class="logo">
+      </div>
+      
+  <!-- Locate Me Button -->
+  <button onclick="locateUser()" style="margin: 10px;">📍 Locate Me</button>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Slide-Up Info Panel -->
+  <div id="infoPanel">
+    <div id="infoContent">
+      <h2 id="spotTitle">Spot Name</h2>
+      <p id="spotDescription">Description or details about this spot.</p>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
