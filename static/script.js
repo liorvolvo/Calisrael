@@ -1,43 +1,26 @@
+// 🌍 Initialize map
 var map = L.map('map').setView([32.0853, 34.7818], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
-// 📍 Spots array — add as many as you like
-const spots = [
-  {
-    name: "כפר סבא",
-    description: "מקום עם מתח ליד הסקייטפארק",
-    lat: 32.171184,
-    lon: 34.910736
-  },
-  {
-    name: "פארק הירקון",
-    description: "מתקני כושר על הדשא ליד הנהר",
-    lat: 32.096831,
-    lon: 34.803987
-  },
-  {
-    name: "חוף תל אביב",
-    description: "מתח מתחת לדק עץ",
-    lat: 32.0704,
-    lon: 34.7675
-  }
-];
-
-// 📌 Create all markers + attach click event
-spots.forEach(spot => {
-  L.marker([spot.lat, spot.lon])
-    .addTo(map)
-    .on("click", function () {
-      document.getElementById("spotTitle").textContent = spot.name;
-      document.getElementById("spotDescription").textContent = spot.description;
-      document.getElementById("infoPanel").classList.add("open");
+// 🔄 Load spots from server
+fetch('/spots')
+  .then(response => response.json())
+  .then(spots => {
+    spots.forEach(spot => {
+      L.marker([spot.lat, spot.lon])
+        .addTo(map)
+        .on("click", function () {
+          document.getElementById("spotTitle").textContent = spot.name;
+          document.getElementById("spotDescription").textContent = spot.description;
+          document.getElementById("infoPanel").classList.add("open");
+        });
     });
-});
+  });
 
-// 🗺 Close info panel when clicking outside
+// 🗺 Close info panel when clicking map
 map.on("click", function () {
   document.getElementById("infoPanel").classList.remove("open");
 });
@@ -66,11 +49,10 @@ function locateUser() {
   );
 }
 
-// 🔐 Admin unlock
+// 🔐 Admin mode
 function unlockAdmin() {
   const pass = prompt("הכנס סיסמה");
-
-  if (pass === "letmein123") {
+  if (pass === "Cal!srael2001") {
     alert("מצב ניהול הופעל");
     document.getElementById('adminAddBtn').style.display = 'block';
     document.getElementById('adminUnlockBtn').style.display = 'none';
@@ -79,41 +61,55 @@ function unlockAdmin() {
   }
 }
 
-// ➕ Add new spot (admin only)
-let newLat = null;
-let newLon = null;
-
+let addMode = false;
 function enableAddMode() {
-  alert("לחץ על המפה כדי לבחור מיקום לנקודה");
-  map.once('click', function (e) {
-    newLat = e.latlng.lat;
-    newLon = e.latlng.lng;
-    document.getElementById('addSpotForm').style.display = 'block';
-  });
+  alert("הקלק על המפה להוספת נקודה");
+  addMode = true;
 }
 
-function submitSpot() {
-  const name = document.getElementById('spotName').value.trim();
-  const desc = document.getElementById('spotDescription').value.trim();
+map.on('click', function (e) {
+  if (!addMode) return;
 
-  if (!name || !desc || newLat === null || newLon === null) {
-    alert("נא למלא את כל השדות ולבחור מיקום במפה");
+  const lat = e.latlng.lat;
+  const lon = e.latlng.lng;
+
+  document.getElementById('addSpotForm').style.display = 'block';
+  window.newSpotCoords = { lat, lon };
+
+  addMode = false;
+});
+
+function submitSpot() {
+  const name = document.getElementById("spotName").value;
+  const description = document.getElementById("spotDescription").value;
+  const { lat, lon } = window.newSpotCoords;
+
+  if (!name || !lat || !lon) {
+    alert("יש למלא שם וקליק במפה");
     return;
   }
 
-  L.marker([newLat, newLon])
-    .addTo(map)
-    .on("click", function () {
-      document.getElementById("spotTitle").textContent = name;
-      document.getElementById("spotDescription").textContent = desc;
-      document.getElementById("infoPanel").classList.add("open");
+  fetch('/add_spot', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name,
+      description,
+      lat,
+      lon
+    })
+  })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        alert("נקודה נוספה בהצלחה 🎉");
+        location.reload();
+      } else {
+        alert("שגיאה בהוספה");
+      }
     });
-
-  document.getElementById('spotName').value = '';
-  document.getElementById('spotDescription').value = '';
-  document.getElementById('addSpotForm').style.display = 'none';
-  newLat = null;
-  newLon = null;
-
-  alert("הנקודה נוספה!");
 }
+document.getElementById("spotDescription").textContent =
+  spot.description || "אין תיאור זמין למקום זה";
