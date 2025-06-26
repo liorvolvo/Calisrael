@@ -1,48 +1,101 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
+/* Logo Styling */
+.logo-container {
+  text-align: center;
+  margin-top: 20px;
 }
 
+.logo {
+  width: 300px;           /* Adjust size as needed */
+  height: 140px;
+  border-radius: 20%;     /* Makes it circular */
+  object-fit: cover;      /* Ensures the image fills the circle without distortion */
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Optional: adds a soft shadow */
+}
+
+/* Map */
 #map {
-  height: calc(100vh - 180px);
+  height: 700px;
   width: 100%;
+  margin-top: 10px;
 }
 
+/* Button Layout */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px auto;
+  flex-wrap: wrap;
+}
+
+.round-btn {
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.round-btn:hover {
+  background-color: #34495e;
+}
+
+/* Add Spot Form */
+#addSpotForm input,
+#addSpotForm textarea {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+#addSpotForm button {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+#addSpotForm button:hover {
+  background-color: #3498db;
+}
+
+/* Info Panel */
 #infoPanel {
   position: fixed;
   bottom: -200px;
   left: 0;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-  transition: bottom 0.3s ease;
+  right: 0;
+  background: #f7f7f7;
+  border-top: 2px solid #ddd;
   padding: 16px;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  transition: bottom 0.3s ease;
   z-index: 1000;
+  text-align: right;
+  direction: rtl;
 }
 
 #infoPanel.open {
   bottom: 0;
 }
 
-button {
-  width: 90%;
-  margin: 10px auto;
-  display: block;
-  font-size: 1.1em;
-  padding: 10px;
-  border-radius: 8px;
-}
-.logo-container {
-  text-align: center;
-  padding: 20px 0;
+#infoPanel h2 {
+  margin-top: 0;
+  font-size: 20px;
 }
 
-.logo {
-  height: auto;
-  width: 500px;  /* You can increase this as needed */
-  max-width: 90vw;
-  display: inline-block;
+#infoPanel p {
+  font-size: 16px;
 }
-

@@ -1,21 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="he">
 <head>
+  <meta charset="UTF-8">
   <title>Calisrael | מצא מכוני כושר פומביים באזור שלך!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    /* Centered button styling */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px auto;
+      flex-wrap: wrap;
+    }
+
+    .round-btn {
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.2s ease;
+    }
+
+    .round-btn:hover {
+      background-color: #34495e;
+    }
+
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="logo-container">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="CalIsrael Logo" class="logo">
-      </div>
-      
-  <!-- Locate Me Button -->
-  <button onclick="locateUser()" style="margin: 10px;">📍 Locate Me</button>
+  <!-- Logo -->
+  <div class="logo-container" style="text-align: center; margin-top: 20px;">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="CalIsrael Logo" class="logo" style="max-height: 100px;">
+  </div>
+
+  <!-- Centered Buttons -->
+  <div class="button-container">
+    <button class="round-btn" onclick="locateUser()">📍 Locate Me</button>
+    <button class="round-btn" id="adminUnlockBtn" onclick="unlockAdmin()">🔒 כניסה לניהול</button>
+    <button class="round-btn" id="adminAddBtn" onclick="enableAddMode()" style="display: none;">➕ הוסף נקודה</button>
+  </div>
+
+  <!-- Add Spot Form -->
+  <div id="addSpotForm" style="display: none; padding: 16px; max-width: 500px; margin: 0 auto;">
+    <h3>הוסף נקודה חדשה</h3>
+    <input id="spotName" placeholder="שם המקום" style="width: 100%; margin-bottom: 8px;"><br>
+    <textarea id="spotDescription" placeholder="תיאור קצר" style="width: 100%; height: 60px;"></textarea><br>
+    <button onclick="submitSpot()">אישור</button>
+  </div>
 
   <!-- Map -->
   <div id="map"></div>
@@ -28,7 +74,7 @@
     </div>
   </div>
 
-  <!-- Leaflet JS -->
+  <!-- JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 

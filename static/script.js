@@ -65,3 +65,55 @@ function locateUser() {
     }
   );
 }
+
+// 🔐 Admin unlock
+function unlockAdmin() {
+  const pass = prompt("הכנס סיסמה");
+
+  if (pass === "letmein123") {
+    alert("מצב ניהול הופעל");
+    document.getElementById('adminAddBtn').style.display = 'block';
+    document.getElementById('adminUnlockBtn').style.display = 'none';
+  } else {
+    alert("סיסמה שגויה");
+  }
+}
+
+// ➕ Add new spot (admin only)
+let newLat = null;
+let newLon = null;
+
+function enableAddMode() {
+  alert("לחץ על המפה כדי לבחור מיקום לנקודה");
+  map.once('click', function (e) {
+    newLat = e.latlng.lat;
+    newLon = e.latlng.lng;
+    document.getElementById('addSpotForm').style.display = 'block';
+  });
+}
+
+function submitSpot() {
+  const name = document.getElementById('spotName').value.trim();
+  const desc = document.getElementById('spotDescription').value.trim();
+
+  if (!name || !desc || newLat === null || newLon === null) {
+    alert("נא למלא את כל השדות ולבחור מיקום במפה");
+    return;
+  }
+
+  L.marker([newLat, newLon])
+    .addTo(map)
+    .on("click", function () {
+      document.getElementById("spotTitle").textContent = name;
+      document.getElementById("spotDescription").textContent = desc;
+      document.getElementById("infoPanel").classList.add("open");
+    });
+
+  document.getElementById('spotName').value = '';
+  document.getElementById('spotDescription').value = '';
+  document.getElementById('addSpotForm').style.display = 'none';
+  newLat = null;
+  newLon = null;
+
+  alert("הנקודה נוספה!");
+}
